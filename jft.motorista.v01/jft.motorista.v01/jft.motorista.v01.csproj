@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -14,5 +14,15 @@
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\jft.motorista.v01.Aplicativo\jft.motorista.v01.Aplicativo.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core\jft.motorista.v01.Core.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Infra\jft.motorista.v01.Infra.vbproj" />
   </ItemGroup>
 </Project>
