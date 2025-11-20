@@ -1,8 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:jft.motorista.v01.Aplicativo.Converters;assembly=jft.motorista.v01.Aplicativo"
              x:Class="jft.motorista.v01.App">
-    <Application.Resources>
+    <!-- 
+         ATENÇÃO AO NAMESPACE "core":
+         1. clr-namespace: Deve ser o namespace onde está a classe em VB.NET (GCDriver.Converters).
+         2. assembly: Deve ser o nome do Projeto/DLL VB.NET (GCDriver.Core).
+    -->
 
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <!-- ============================================================ -->
+            <!-- 1. CONVERTERS GLOBAIS (VB.NET) -->
+            <!-- ============================================================ -->
+            <!-- Registra a classe para ser usada como {StaticResource SaldoNegativoConverter} -->
+            <converters:SaldoNegativoConverter x:Key="SaldoNegativoConverter" />
+
+            <!-- ============================================================ -->
+            <!-- 2. PALETA DE CORES -->
+            <!-- ============================================================ -->
+            <Color x:Key="PrimaryColor">#2196F3</Color>
+            <!-- Azul Google -->
+            <Color x:Key="PrimaryDarkColor">#1976D2</Color>
+            <!-- Azul Escuro -->
+            <Color x:Key="AccentColor">#FF4081</Color>
+            <!-- Rosa Destaque -->
+
+            <Color x:Key="TextPrimary">#212121</Color>
+            <!-- Preto Suave -->
+            <Color x:Key="TextSecondary">#757575</Color>
+            <!-- Cinza -->
+
+            <Color x:Key="PositiveColor">#4CAF50</Color>
+            <!-- Verde Receita -->
+            <Color x:Key="NegativeColor">#F44336</Color>
+            <!-- Vermelho Despesa -->
+            <Color x:Key="WarningColor">#FFCDD2</Color>
+            <!-- Vermelho Claro (Alerta de Saldo) -->
+
+            <!-- ============================================================ -->
+            <!-- 3. ESTILOS GLOBAIS -->
+            <!-- ============================================================ -->
+
+            <!-- Estilo da Barra de Navegação (NavigationPage) -->
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="BarTextColor" Value="White" />
+            </Style>
+
+            <!-- Estilo Padrão para Labels de Título -->
+            <Style x:Key="TitleLabelStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{StaticResource TextPrimary}" />
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

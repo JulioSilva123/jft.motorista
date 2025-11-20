@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.CategoriasPage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+    
+    
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *, Auto">
+
+            <!-- ============================================================ -->
+            <!-- 1. SELETOR DE TIPO (Igual Lançamentos) -->
+            <!-- ============================================================ -->
+            <Grid Grid.Row="0" ColumnDefinitions="*, *" Padding="15,20" ColumnSpacing="15">
+                <Frame CornerRadius="10" Padding="0" HasShadow="False">
+                    <Button Text="RECEITA" 
+                            Command="{Binding MudarTipoCommand}" 
+                            CommandParameter="0"
+                            FontAttributes="Bold"
+                            HeightRequest="50">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsReceita}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#4CAF50"/>
+                                <Setter Property="TextColor" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsReceita}" Value="False">
+                                <Setter Property="BackgroundColor" Value="White"/>
+                                <Setter Property="TextColor" Value="#4CAF50"/>
+                                <Setter Property="BorderColor" Value="#4CAF50"/>
+                                <Setter Property="BorderWidth" Value="1"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Frame>
+
+                <Frame Grid.Column="1" CornerRadius="10" Padding="0" HasShadow="False">
+                    <Button Text="DESPESA" 
+                            Command="{Binding MudarTipoCommand}" 
+                            CommandParameter="1"
+                            FontAttributes="Bold"
+                            HeightRequest="50">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsDespesa}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#F44336"/>
+                                <Setter Property="TextColor" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsDespesa}" Value="False">
+                                <Setter Property="BackgroundColor" Value="White"/>
+                                <Setter Property="TextColor" Value="#F44336"/>
+                                <Setter Property="BorderColor" Value="#F44336"/>
+                                <Setter Property="BorderWidth" Value="1"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Frame>
+            </Grid>
+
+            <!-- ============================================================ -->
+            <!-- 2. FORMULÁRIO -->
+            <!-- ============================================================ -->
+            <ScrollView Grid.Row="1" Padding="20,0">
+                <StackLayout Spacing="20">
+
+                    <!-- Nome -->
+                    <StackLayout>
+                        <Label Text="Nome da Categoria" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                            <Entry Text="{Binding Nome}" 
+                                   Placeholder="Ex: Multas, Lanche..."
+                                   FontSize="18"
+                                   TextColor="#333"/>
+                        </Frame>
+                    </StackLayout>
+
+                    <!-- Seleção de Ícone (Horizontal) -->
+                    <StackLayout>
+                        <Label Text="Escolha um Ícone" TextColor="Gray" FontSize="12"/>
+                        <CollectionView ItemsSource="{Binding ListaIcones}" 
+                                        SelectedItem="{Binding IconeSelecionado, Mode=TwoWay}"
+                                        SelectionMode="Single"
+                                        HeightRequest="60">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame CornerRadius="25" 
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           Padding="0" 
+                                           HasShadow="False"
+                                           BorderColor="#DDD">
+                                        <!-- Visual State para mudar cor quando selecionado -->
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="White" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BackgroundColor" Value="#BBDEFB" />
+                                                        <!-- Azul Claro -->
+                                                        <Setter Property="BorderColor" Value="#2196F3" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+
+                                        <Label Text="{Binding .}" 
+                                               FontFamily="FontAwesome" 
+                                               FontSize="20" 
+                                               TextColor="#555"
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center"/>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+
+                    <!-- Seleção de Cor (Horizontal) -->
+                    <StackLayout>
+                        <Label Text="Escolha uma Cor" TextColor="Gray" FontSize="12"/>
+                        <CollectionView ItemsSource="{Binding ListaCores}" 
+                                        SelectedItem="{Binding CorSelecionada, Mode=TwoWay}"
+                                        SelectionMode="Single"
+                                        HeightRequest="60">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="10"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame CornerRadius="25" 
+                                           HeightRequest="50" 
+                                           WidthRequest="50" 
+                                           Padding="0" 
+                                           HasShadow="False"
+                                           BackgroundColor="Transparent"
+                                           BorderColor="Transparent">
+
+                                        <!-- O Círculo de Cor -->
+                                        <BoxView Color="{Binding .}" 
+                                                 CornerRadius="20" 
+                                                 HeightRequest="40" 
+                                                 WidthRequest="40" 
+                                                 HorizontalOptions="Center" 
+                                                 VerticalOptions="Center"/>
+
+                                        <!-- Visual State para Borda de Seleção -->
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal" />
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="BorderColor" Value="#333" />
+                                                        <Setter Property="BackgroundColor" Value="#EEE" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+
+                </StackLayout>
+            </ScrollView>
+
+            <!-- ============================================================ -->
+            <!-- 3. RODAPÉ -->
+            <!-- ============================================================ -->
+            <StackLayout Grid.Row="2" Padding="20">
+                <Button Text="SALVAR CATEGORIA" 
+                        Command="{Binding SalvarCommand}"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold"
+                        IsEnabled="{Binding IsNotBusy}"/>
+            </StackLayout>
+
+            <!-- Loading Overlay -->
+            <Grid Grid.RowSpan="3" BackgroundColor="#80000000" IsVisible="{Binding IsBusy}">
+                <ActivityIndicator IsRunning="True" Color="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

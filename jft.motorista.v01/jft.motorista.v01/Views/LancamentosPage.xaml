@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:behaviors="clr-namespace:jft.motorista.v01.Aplicativo.Behaviors;assembly=jft.motorista.v01.Aplicativo"
+             x:Class="jft.motorista.v01.Views.LancamentosPage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *, Auto">
+
+            <Grid Grid.Row="0" ColumnDefinitions="*, *" Padding="15,20" ColumnSpacing="15">
+
+                <Frame CornerRadius="10" Padding="0" HasShadow="False">
+                    <Button Text="RECEITA" 
+                            Command="{Binding MudarTipoCommand}" 
+                            CommandParameter="0"
+                            FontAttributes="Bold"
+                            HeightRequest="50">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsReceita}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#4CAF50"/>
+                                <Setter Property="TextColor" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsReceita}" Value="False">
+                                <Setter Property="BackgroundColor" Value="White"/>
+                                <Setter Property="TextColor" Value="#4CAF50"/>
+                                <Setter Property="BorderColor" Value="#4CAF50"/>
+                                <Setter Property="BorderWidth" Value="1"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Frame>
+
+                <Frame Grid.Column="1" CornerRadius="10" Padding="0" HasShadow="False">
+                    <Button Text="DESPESA" 
+                            Command="{Binding MudarTipoCommand}" 
+                            CommandParameter="1"
+                            FontAttributes="Bold"
+                            HeightRequest="50">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsDespesa}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#F44336"/>
+                                <Setter Property="TextColor" Value="White"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsDespesa}" Value="False">
+                                <Setter Property="BackgroundColor" Value="White"/>
+                                <Setter Property="TextColor" Value="#F44336"/>
+                                <Setter Property="BorderColor" Value="#F44336"/>
+                                <Setter Property="BorderWidth" Value="1"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Frame>
+            </Grid>
+
+            <ScrollView Grid.Row="1" Padding="20,0">
+                <StackLayout Spacing="15">
+
+                    <!-- Valor -->
+                    <StackLayout>
+                        <Label Text="Valor (R$)" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+
+                            <!-- 
+       MUDANÇA IMPORTANTE: Keyboard="Text" 
+       Isso impede que o Android force regras de pontuação invisíveis.
+       O Behavior cuidará de bloquear as letras "A, B, C".
+    -->
+                            <Entry Text="{Binding Valor, Mode=TwoWay}" 
+           Keyboard="Text" 
+           FontSize="30" 
+           Placeholder="0,00"
+           TextColor="#333"
+           FontAttributes="Bold"
+           ClearButtonVisibility="WhileEditing">
+
+                                <Entry.Behaviors>
+                                    <behaviors:CurrencyInputBehavior />
+                                </Entry.Behaviors>
+
+                            </Entry>
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout>
+                        <Label Text="Categoria" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="5,0" HasShadow="False" BackgroundColor="White">
+                            <Picker ItemsSource="{Binding ListaCategorias}" 
+                                    SelectedItem="{Binding CategoriaSelecionada}"
+                                    ItemDisplayBinding="{Binding nm_categoria}"
+                                    Title="Selecione..."
+                                    TextColor="#333"/>
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout>
+                        <Label Text="Data" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="5,0" HasShadow="False" BackgroundColor="White">
+                            <DatePicker Date="{Binding Data}" TextColor="#333"/>
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout>
+                        <Label Text="Observação (Opcional)" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False" BackgroundColor="White">
+                            <Entry Text="{Binding Observacao}" 
+                                   Placeholder="Ex: Gorjeta, Manutenção Extra"
+                                   FontSize="16"/>
+                        </Frame>
+                    </StackLayout>
+
+                </StackLayout>
+            </ScrollView>
+
+            <StackLayout Grid.Row="2" Padding="20">
+                <Button Text="SALVAR" 
+                        Command="{Binding SalvarCommand}"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold"
+                        IsEnabled="{Binding IsNotBusy}">
+                </Button>
+            </StackLayout>
+
+            <Grid Grid.RowSpan="3" BackgroundColor="#80000000" IsVisible="{Binding IsBusy}">
+                <ActivityIndicator IsRunning="True" Color="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

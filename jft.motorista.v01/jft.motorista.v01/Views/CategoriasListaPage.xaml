@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.CategoriasListaPage" 
+             Title="Gerenciar Categorias"
+             BackgroundColor="#F5F5F5">
+
+    <!-- Botão de Adicionar na Barra de Título -->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Nova" Clicked="OnNovaCategoriaClicked" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <!-- Lista de Categorias -->
+            <CollectionView ItemsSource="{Binding Lista}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnCategoriaSelected">
+
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Nenhuma categoria cadastrada." TextColor="Gray"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Excluir" 
+                                               BackgroundColor="Red" 
+                                               Command="{Binding Path=BindingContext.DeletarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="15" BackgroundColor="White">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Ícone Colorido -->
+                                <Frame Grid.Column="0" 
+                                       CornerRadius="20" 
+                                       HeightRequest="40" 
+                                       WidthRequest="40" 
+                                       Padding="0" 
+                                       BackgroundColor="{Binding Cor}" 
+                                       HasShadow="False"
+                                       VerticalOptions="Center">
+                                    <Label Text="{Binding Icone}" 
+                                           FontFamily="FontAwesome" 
+                                           TextColor="White" 
+                                           HorizontalOptions="Center" 
+                                           VerticalOptions="Center"/>
+                                </Frame>
+
+                                <!-- Nome -->
+                                <StackLayout Grid.Column="1" Padding="15,0" VerticalOptions="Center">
+                                    <Label Text="{Binding Nome}" FontAttributes="Bold" TextColor="#333"/>
+                                </StackLayout>
+
+                                <!-- Tipo (Receita/Despesa) -->
+                                <Label Grid.Column="2" 
+                                       Text="{Binding TipoTexto}" 
+                                       TextColor="{Binding CorTipo}" 
+                                       FontSize="12" 
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}" 
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center"
+                               Color="#2196F3"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

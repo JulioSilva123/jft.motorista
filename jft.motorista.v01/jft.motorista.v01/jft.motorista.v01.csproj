@@ -17,12 +17,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\" />
+    <ProjectReference Include="..\jft.motorista.v01.Aplicativo\jft.motorista.v01.Aplicativo.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core.EntitiesViews\jft.motorista.v01.Core.EntitiesViews.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core.Entities\jft.motorista.v01.Core.Entities.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core\jft.motorista.v01.Core.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Infra\jft.motorista.v01.Infra.vbproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\jft.motorista.v01.Aplicativo\jft.motorista.v01.Aplicativo.vbproj" />
-    <ProjectReference Include="..\jft.motorista.v01.Core\jft.motorista.v01.Core.vbproj" />
-    <ProjectReference Include="..\jft.motorista.v01.Infra\jft.motorista.v01.Infra.vbproj" />
+    <EmbeddedResource Update="Views\CategoriasListaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\CategoriasPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\DashboardPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\DashboardViewModel.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\LancamentosPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\VeiculosListaPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Views\VeiculosPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

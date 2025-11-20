@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:behaviors="clr-namespace:jft.motorista.v01.Aplicativo.Behaviors;assembly=jft.motorista.v01.Aplicativo"
+             x:Class="jft.motorista.v01.Views.VeiculosPage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+    <ContentPage.Content>
+        <ScrollView Padding="20">
+            <StackLayout Spacing="20">
+
+                <!-- Modelo -->
+                <StackLayout>
+                    <Label Text="Modelo" TextColor="Gray" FontSize="12"/>
+                    <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                        <Entry Text="{Binding Modelo}" Placeholder="Ex: Chevrolet Onix 1.0" TextColor="#333"/>
+                    </Frame>
+                </StackLayout>
+
+                <!-- Placa -->
+                <StackLayout>
+                    <Label Text="Placa" TextColor="Gray" FontSize="12"/>
+                    <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                        <Entry Text="{Binding Placa}" Placeholder="ABC-1234" TextColor="#333"/>
+                    </Frame>
+                </StackLayout>
+
+                <Grid ColumnDefinitions="*, *">
+                    <!-- KM Atual -->
+                    <StackLayout Grid.Column="0">
+                        <Label Text="Odômetro Atual" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                            <Entry Text="{Binding KmAtual, Mode=TwoWay}" 
+                                   Keyboard="Numeric" 
+                                   TextColor="#333"
+                                   Placeholder="0">
+                            </Entry>
+                        </Frame>
+                    </StackLayout>
+
+                    <!-- Média -->
+                    <StackLayout Grid.Column="1">
+                        <Label Text="Média (Km/L)" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                            <Entry Text="{Binding MediaConsumo, Mode=TwoWay}" 
+                                   Keyboard="Text" 
+                                   TextColor="#333"
+                                   Placeholder="Ex: 12,5">
+                                <Entry.Behaviors>
+                                    <behaviors:CurrencyInputBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+
+                <!-- Switch Ativo -->
+                <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="15,10" HasShadow="False">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Veículo Principal (Ativo)" 
+                               VerticalOptions="Center" 
+                               TextColor="#333" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="FillAndExpand"/>
+                        <Switch IsToggled="{Binding IsAtivo}" OnColor="#4CAF50"/>
+                    </StackLayout>
+                </Frame>
+                <Label Text="Se marcar este, os outros veículos serão desativados." FontSize="11" TextColor="Gray" Margin="5,-15,0,0"/>
+
+                <!-- Botão Salvar -->
+                <Button Text="SALVAR VEÍCULO" 
+                        Command="{Binding SalvarCommand}"
+                        BackgroundColor="#2196F3"
+                        TextColor="White"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        FontAttributes="Bold"
+                        IsEnabled="{Binding IsNotBusy}"
+                        Margin="0,20,0,0"/>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.DashboardPage"
+             Title="GC Driver"
+             BackgroundColor="#F5F5F5"
+             NavigationPage.HasNavigationBar="False">
+    <!-- HasNavigationBar="False" esconde a barra padrão para usarmos nosso cabeçalho azul -->
+
+
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, Auto, *" RowSpacing="0">
+
+            <!-- ============================================================ -->
+            <!-- 1. CABEÇALHO AZUL -->
+            <!-- ============================================================ -->
+            <StackLayout Grid.Row="0" BackgroundColor="#2196F3" Padding="20,30,20,50">
+
+                <!-- LINHA SUPERIOR: Título e Botões -->
+                <!-- Alterado para 3 colunas: *, Auto, Auto -->
+                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="15">
+
+                    <!-- Título -->
+                    <Label Grid.Column="0" 
+                           Text="Saldo em Caixa" 
+                           TextColor="White" 
+                           Opacity="0.9" 
+                           VerticalOptions="Center"/>
+
+                    <!-- NOVO: BOTÃO VEÍCULOS (Carro) -->
+                    <ImageButton Grid.Column="1"
+                                 Clicked="OnMeusVeiculosClicked"
+                                 BackgroundColor="Transparent"
+                                 HeightRequest="30"
+                                 WidthRequest="30"
+                                 VerticalOptions="Center">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf1b9;" Color="White" Size="20"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <!-- BOTÃO CONFIGURAÇÕES (Engrenagem) -->
+                    <ImageButton Grid.Column="2"
+                                 Clicked="OnConfiguracoesClicked"
+                                 BackgroundColor="Transparent"
+                                 HeightRequest="30"
+                                 WidthRequest="30"
+                                 VerticalOptions="Center">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf013;" Color="White" Size="22"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+                </Grid>
+
+                <!-- Valor do Saldo -->
+                <Label Text="{Binding SaldoAtual, StringFormat='{0:C}'}" 
+                       TextColor="White" 
+                       FontSize="36" 
+                       FontAttributes="Bold" 
+                       HorizontalOptions="Center">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" 
+                                     Binding="{Binding SaldoAtual, Converter={StaticResource SaldoNegativoConverter}}" 
+                                     Value="True">
+                            <Setter Property="TextColor" Value="#FFCDD2"/>
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+
+                <!-- Saldo do Dia (Destaque) -->
+                <Frame BackgroundColor="#30FFFFFF" 
+                       Padding="15,5" 
+                       CornerRadius="15" 
+                       HorizontalOptions="Center" 
+                       HasShadow="False"
+                       Margin="0,5,0,0">
+                    <StackLayout Orientation="Horizontal" Spacing="5">
+                        <Label Text="Hoje:" TextColor="White" FontAttributes="Bold" FontSize="12"/>
+                        <Label Text="{Binding SaldoDia, StringFormat='{0:C}'}" 
+                               TextColor="White" 
+                               FontAttributes="Bold"
+                               FontSize="12">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" 
+                                             Binding="{Binding SaldoDia, Converter={StaticResource SaldoNegativoConverter}}" 
+                                             Value="True">
+                                    <Setter Property="TextColor" Value="#FFCDD2"/>
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Navegação de Meses -->
+                <StackLayout Orientation="Horizontal" 
+                             HorizontalOptions="Center" 
+                             Margin="0,15,0,0" 
+                             Spacing="25">
+
+                    <ImageButton Command="{Binding MesAnteriorCommand}" 
+                                 BackgroundColor="Transparent" 
+                                 HeightRequest="30"
+                                 WidthRequest="30">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf053;" Color="White"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <Label Text="{Binding MesTexto}" 
+                           TextColor="White" 
+                           FontSize="18" 
+                           FontAttributes="Bold" 
+                           VerticalOptions="Center"/>
+
+                    <ImageButton Command="{Binding ProximoMesCommand}" 
+                                 BackgroundColor="Transparent" 
+                                 HeightRequest="30"
+                                 WidthRequest="30">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf054;" Color="White"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+                </StackLayout>
+            </StackLayout>
+
+            <!-- ============================================================ -->
+            <!-- 2. CARDS DE RESUMO -->
+            <!-- ============================================================ -->
+            <Grid Grid.Row="1" ColumnDefinitions="*, *" Padding="15,0" Margin="0,-35,0,10">
+
+                <!-- Entradas -->
+                <Frame Grid.Column="0" CornerRadius="15" HasShadow="True" Padding="15" BackgroundColor="White">
+                    <StackLayout Spacing="5">
+                        <Label Text="ENTRADAS" FontSize="11" TextColor="#4CAF50" FontAttributes="Bold"/>
+                        <Label Text="{Binding TotalEntradas, StringFormat='{0:C}'}" 
+                               TextColor="#2E7D32" 
+                               FontSize="16" 
+                               FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Saídas -->
+                <Frame Grid.Column="1" CornerRadius="15" HasShadow="True" Padding="15" BackgroundColor="White">
+                    <StackLayout Spacing="5">
+                        <Label Text="SAÍDAS" FontSize="11" TextColor="#F44336" FontAttributes="Bold"/>
+                        <Label Text="{Binding TotalSaidas, StringFormat='{0:C}'}" 
+                               TextColor="#C62828" 
+                               FontSize="16" 
+                               FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+
+            <!-- ============================================================ -->
+            <!-- 3. LISTA E FAB -->
+            <!-- ============================================================ -->
+            <Grid Grid.Row="2">
+
+                <CollectionView ItemsSource="{Binding Extrato}" 
+                                SelectionMode="Single"
+                                SelectionChanged="OnLancamentoSelected">
+
+                    <CollectionView.EmptyView>
+                        <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                            <Label Text="Nenhum lançamento." TextColor="Gray" HorizontalOptions="Center"/>
+                            <Label Text="Toque no + para começar!" TextColor="#2196F3" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Excluir" 
+                                                   BackgroundColor="#FF5252" 
+                                                   Command="{Binding DeletarCommand}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Grid Padding="15,12" BackgroundColor="White" ColumnDefinitions="Auto, *, Auto">
+
+                                    <!-- Ícone -->
+                                    <Frame Grid.Column="0" CornerRadius="25" HeightRequest="50" WidthRequest="50" 
+                                           Padding="0" HasShadow="False" BackgroundColor="#F0F0F0" IsClippedToBounds="True"
+                                           VerticalOptions="Center">
+                                        <!-- IMPORTANTE: Se não usar FontAwesome, troque por uma Image ou texto simples -->
+                                        <Label Text="{Binding Icone}" 
+                                               FontFamily="FontAwesome"
+                                               TextColor="#555"
+                                               HorizontalOptions="Center" 
+                                               VerticalOptions="Center" 
+                                               FontSize="20"/>
+                                    </Frame>
+
+                                    <!-- Descrição -->
+                                    <StackLayout Grid.Column="1" Padding="15,0" VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding Titulo}" FontAttributes="Bold" FontSize="16" TextColor="#333"/>
+                                        <Label Text="{Binding DataFormatada}" TextColor="#999" FontSize="12"/>
+                                    </StackLayout>
+
+                                    <!-- Valores -->
+                                    <StackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center" Spacing="2">
+                                        <Label Text="{Binding ValorFormatado}" 
+                                               TextColor="{Binding CorValor}" 
+                                               FontAttributes="Bold" 
+                                               FontSize="16"
+                                               HorizontalOptions="End"/>
+
+                                        <Label Text="{Binding SaldoLinha}" 
+                                               FontSize="11" 
+                                               TextColor="#AAA" 
+                                               HorizontalOptions="End"/>
+                                    </StackLayout>
+
+                                    <BoxView Grid.ColumnSpan="3" HeightRequest="1" Color="#F5F5F5" VerticalOptions="End"/>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <!-- Espaço extra no final para o botão não tampar o último item -->
+                    <CollectionView.Footer>
+                        <BoxView HeightRequest="80" Color="Transparent"/>
+                    </CollectionView.Footer>
+                </CollectionView>
+
+                <!-- FAB (Botão Flutuante) -->
+                <Frame CornerRadius="30"
+                       HeightRequest="60"
+                       WidthRequest="60"
+                       HorizontalOptions="End"
+                       VerticalOptions="End"
+                       Margin="25"
+                       Padding="0"
+                       IsClippedToBounds="True"
+                       HasShadow="True"
+                       BackgroundColor="#2196F3">
+
+                    <ImageButton Clicked="OnNovoLancamentoClicked"
+                                 BackgroundColor="Transparent"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center">
+                        <ImageButton.Source>
+                            <!-- Use um arquivo local "plus.png" ou FontAwesome -->
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf067;" Color="White" Size="24"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+                </Frame>
+            </Grid>
+
+            <!-- Loading Overlay -->
+            <Grid Grid.RowSpan="3" BackgroundColor="#80000000" IsVisible="{Binding IsBusy}">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color="White" VerticalOptions="Center" HorizontalOptions="Center"/>
+            </Grid>
+
+        </Grid>
+    </ContentPage.Content>
+
+</ContentPage>

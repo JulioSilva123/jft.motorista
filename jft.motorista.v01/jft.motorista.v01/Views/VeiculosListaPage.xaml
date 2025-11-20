@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="jft.motorista.v01.Views.VeiculosListaPage"
+             Title="Meus Veículos"
+             BackgroundColor="#F5F5F5">
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Novo" Clicked="OnNovoVeiculoClicked" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <CollectionView ItemsSource="{Binding Lista}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnVeiculoSelected">
+
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Nenhum veículo cadastrado." TextColor="Gray"/>
+                        <Label Text="Cadastre seu carro para calcular médias." TextColor="#2196F3" FontSize="12"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <!-- Ações Laterais -->
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Ativar" 
+                                               BackgroundColor="#4CAF50" 
+                                               Command="{Binding Path=BindingContext.AtivarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Excluir" 
+                                               BackgroundColor="#F44336" 
+                                               Command="{Binding Path=BindingContext.DeletarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <!-- O Item -->
+                            <Grid Padding="15,10" BackgroundColor="White" Opacity="{Binding Opacidade}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Ícone de Status -->
+                                <Label Grid.Column="0" 
+                                       Text="{Binding IconeStatus}" 
+                                       FontFamily="FontAwesome" 
+                                       TextColor="{Binding CorStatus}"
+                                       FontSize="24" 
+                                       VerticalOptions="Center"
+                                       Margin="0,0,15,0"/>
+
+                                <!-- Dados -->
+                                <StackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding Modelo}" FontAttributes="Bold" TextColor="#333" FontSize="16"/>
+                                    <Label Text="{Binding Placa}" TextColor="Gray" FontSize="12"/>
+                                </StackLayout>
+
+                                <!-- KM -->
+                                <Label Grid.Column="2" 
+                                       Text="{Binding KmDescricao}" 
+                                       TextColor="#333" 
+                                       FontAttributes="Bold" 
+                                       VerticalOptions="Center"/>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                               IsVisible="{Binding IsBusy}" 
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center"
+                               Color="#2196F3"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
