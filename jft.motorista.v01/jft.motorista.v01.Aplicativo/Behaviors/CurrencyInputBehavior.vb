@@ -5,13 +5,12 @@ Namespace Behaviors
 
     ''' <summary>
     ''' Behavior para entrada monetária (R$).
-    ''' Garante que apenas números e uma única vírgula sejam aceitos.
-    ''' Não altera a posição do cursor.
+    ''' Aceita números, vírgula e sinal de menos (negativo) no início.
     ''' </summary>
     Public Class CurrencyInputBehavior
         Inherits Behavior(Of Entry)
 
-        ' Flag para evitar loops infinitos (Reentrância)
+        ' Flag para evitar loops infinitos
         Private _isValidating As Boolean = False
 
         Protected Overrides Sub OnAttachedTo(entry As Entry)
@@ -26,10 +25,7 @@ Namespace Behaviors
 
         Private Sub OnEntryTextChanged(sender As Object, args As TextChangedEventArgs)
 
-            ' Se já estamos validando, sai para não criar loop
             If _isValidating Then Return
-
-            ' Se o texto não mudou de verdade (mudança de foco/binding nulo), sai
             If args.NewTextValue = args.OldTextValue Then Return
 
             If String.IsNullOrEmpty(args.NewTextValue) Then Return
@@ -40,35 +36,45 @@ Namespace Behaviors
                 Dim texto = args.NewTextValue
                 Dim valido = True
 
-                ' 1. Regra: Apenas Números, Vírgula e Ponto
-                For Each c In texto
-                    If Not Char.IsDigit(c) AndAlso c <> ","c AndAlso c <> "."c Then
-                        valido = False
-                        Exit For
-                    End If
+                ' 1. Auto-Correção: Troca Ponto por Vírgula
+                If texto.Contains(".") Then
+                    texto = texto.Replace(".", ",")
+                    entry.Text = texto
+                    ' O set dispara o evento de novo, mas o _isValidating protege
+                    Return
+                End If
+
+                ' 2. Regra: Caracteres Permitidos (Números, Vírgula, Menos)
+                For i As Integer = 0 To texto.Length - 1
+                    Dim c = texto(i)
+
+                    If Char.IsDigit(c) Then Continue For
+
+                    If c = ","c Then Continue For
+
+                    ' Permite sinal de Menos APENAS na primeira posição
+                    If c = "-"c AndAlso i = 0 Then Continue For
+
+                    ' Se chegou aqui, é inválido
+                    valido = False
+                    Exit For
                 Next
 
-                ' 2. Regra: Máximo 1 separador (vírgula ou ponto)
-                Dim qtdSeparadores = texto.Count(Function(c) c = ","c OrElse c = "."c)
-                If qtdSeparadores > 1 Then
+                ' 3. Regra: Máximo 1 vírgula
+                Dim qtdVirgulas = texto.Count(Function(c) c = ","c)
+                If qtdVirgulas > 1 Then
                     valido = False
                 End If
 
-                ' SE INVÁLIDO: Reverte e sai
-                If Not valido Then
-                    entry.Text = args.OldTextValue
-                    Return ' O set acima dispara o evento de novo, mas o finally libera a flag
+                ' 4. Regra: Máximo 1 sinal de menos
+                Dim qtdMenos = texto.Count(Function(c) c = "-"c)
+                If qtdMenos > 1 Then
+                    valido = False
                 End If
 
-                ' 3. Auto-Correção: Troca Ponto por Vírgula (para teclados US/Numéricos)
-                ' Isso ajuda muito no Android onde o teclado numérico só tem ponto
-                If texto.Contains(".") Then
-                    Dim textoCorrigido = texto.Replace(".", ",")
-
-                    ' Só aplica se for diferente para evitar loop desnecessário
-                    If textoCorrigido <> texto Then
-                        entry.Text = textoCorrigido
-                    End If
+                ' SE INVÁLIDO: Reverte
+                If Not valido Then
+                    entry.Text = args.OldTextValue
                 End If
 
             Finally

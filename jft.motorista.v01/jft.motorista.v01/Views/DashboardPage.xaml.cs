@@ -40,16 +40,37 @@ namespace jft.motorista.v01.Views
             ((CollectionView)sender).SelectedItem = null;
         }
 
-        // Configurações (Categorias)
+        // Navegações do Cabeçalho
+
+        // ALTERADO: Agora abre um menu de opções
         private async void OnConfiguracoesClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CategoriasListaPage());
+            string acao = await DisplayActionSheet("Configurações", "Cancelar", null, "Gerir Categorias", "Ajuste Manual de Saldos");
+
+            switch (acao)
+            {
+                case "Gerir Categorias":
+                    await Navigation.PushAsync(new CategoriasListaPage());
+                    break;
+                case "Ajuste Manual de Saldos":
+                    await Navigation.PushAsync(new SaldosMensaisListaPage());
+                    break;
+            }
         }
 
-        // NOVO: Meus Veículos
         private async void OnMeusVeiculosClicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new VeiculosListaPage());
+        }
+
+        private async void OnMeusAbastecimentosClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AbastecimentosListaPage());
+        }
+
+        private async void OnMeusDiariosClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new DiariosListaPage());
         }
 
         protected override void OnAppearing()

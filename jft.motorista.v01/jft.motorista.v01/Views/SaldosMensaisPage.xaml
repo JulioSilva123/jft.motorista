@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:jft.motorista.v01.Aplicativo.Behaviors;assembly=jft.motorista.v01.Aplicativo"
+             x:Class="jft.motorista.v01.Views.SaldosMensaisPage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.Content>
+        <ScrollView Padding="20">
+            <StackLayout Spacing="20">
+                <Label Text="Atenção: Alterar manualmente um fechamento pode afetar o saldo dos meses seguintes." TextColor="#F44336" FontSize="12"/>
+
+                <Grid ColumnDefinitions="*, *">
+                    <StackLayout Grid.Column="0">
+                        <Label Text="Mês" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#DDD" Padding="10,5" CornerRadius="5" HasShadow="False">
+                            <Entry Text="{Binding Mes}" Keyboard="Numeric" TextColor="#333" Placeholder="1-12"/>
+                        </Frame>
+                    </StackLayout>
+                    <StackLayout Grid.Column="1">
+                        <Label Text="Ano" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#DDD" Padding="10,5" CornerRadius="5" HasShadow="False">
+                            <Entry Text="{Binding Ano}" Keyboard="Numeric" TextColor="#333" Placeholder="2025"/>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+
+                <StackLayout>
+                    <Label Text="Saldo Final (R$)" TextColor="Gray" FontSize="12"/>
+                    <Frame BorderColor="#DDD" Padding="10,5" CornerRadius="5" HasShadow="False">
+                        <Entry Text="{Binding SaldoFinal}" Keyboard="Text" TextColor="#333" FontSize="24" FontAttributes="Bold">
+                            <Entry.Behaviors>
+                                <behaviors:CurrencyInputBehavior />
+                            </Entry.Behaviors>
+                        </Entry>
+                    </Frame>
+                </StackLayout>
+
+                <Button Text="SALVAR AJUSTE" Command="{Binding SalvarCommand}" BackgroundColor="#2196F3" TextColor="White" CornerRadius="25" HeightRequest="50" FontAttributes="Bold" IsEnabled="{Binding IsNotBusy}"/>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

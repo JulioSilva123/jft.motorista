@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.DiariosListaPage"
+             Title="Diários de Bordo"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Novo" Clicked="OnNovoDiarioClicked" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto, *, Auto">
+
+            <!-- 1. Navegação de Mês (Estilo Dashboard mas Cinza) -->
+            <StackLayout Grid.Row="0" BackgroundColor="White" Padding="15" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="20">
+                <ImageButton Command="{Binding MesAnteriorCommand}" BackgroundColor="Transparent" HeightRequest="30" WidthRequest="30" HorizontalOptions="Start">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FontAwesome" Glyph="&#xf053;" Color="#2196F3"/>
+                    </ImageButton.Source>
+                </ImageButton>
+
+                <Label Text="{Binding MesTexto}" TextColor="#2196F3" FontSize="16" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+
+                <ImageButton Command="{Binding ProximoMesCommand}" BackgroundColor="Transparent" HeightRequest="30" WidthRequest="30" HorizontalOptions="End">
+                    <ImageButton.Source>
+                        <FontImageSource FontFamily="FontAwesome" Glyph="&#xf054;" Color="#2196F3"/>
+                    </ImageButton.Source>
+                </ImageButton>
+            </StackLayout>
+
+            <!-- 2. Lista -->
+            <CollectionView Grid.Row="1" 
+                            ItemsSource="{Binding Lista}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnDiarioSelected">
+
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Nenhum diário neste mês." TextColor="Gray"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Excluir" 
+                                               BackgroundColor="Red" 
+                                               Command="{Binding Path=BindingContext.DeletarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="15,10" BackgroundColor="White" ColumnDefinitions="Auto, *, Auto">
+
+                                <!-- Data (Box Esquerda) -->
+                                <Frame Grid.Column="0" CornerRadius="8" Padding="10" BackgroundColor="#E3F2FD" HasShadow="False" WidthRequest="60">
+                                    <StackLayout Spacing="0" VerticalOptions="Center">
+                                        <Label Text="{Binding DiaMes}" FontAttributes="Bold" TextColor="#1976D2" HorizontalOptions="Center" FontSize="12"/>
+                                        <Label Text="{Binding DiaSemana}" TextColor="#1976D2" HorizontalOptions="Center" FontSize="10" LineBreakMode="TailTruncation"/>
+                                    </StackLayout>
+                                </Frame>
+
+                                <!-- Dados Centrais -->
+                                <StackLayout Grid.Column="1" Padding="10,0" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding HorarioFormatado}" FontAttributes="Bold" TextColor="#333" FontSize="16"/>
+                                    <Label Text="{Binding TempoTrabalhadoFormatado, StringFormat='Duração: {0}'}" TextColor="Gray" FontSize="12"/>
+                                </StackLayout>
+
+                                <!-- KM (Direita) -->
+                                <StackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="{Binding KmRodadoFormatado}" TextColor="#4CAF50" FontAttributes="Bold" FontSize="16" HorizontalOptions="End"/>
+                                    <Label Text="rodados" TextColor="Gray" FontSize="10" HorizontalOptions="End"/>
+                                </StackLayout>
+
+                                <BoxView Grid.ColumnSpan="3" HeightRequest="1" Color="#F5F5F5" VerticalOptions="End"/>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- 3. Rodapé de Resumo -->
+            <Frame Grid.Row="2" BackgroundColor="#2196F3" CornerRadius="0" Padding="15">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="Total Rodado no Mês:" TextColor="White" FontAttributes="Bold"/>
+                    <Label Text="{Binding TotalKmMes, StringFormat='{0:N0} km'}" TextColor="White" FontAttributes="Bold" HorizontalOptions="EndAndExpand"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Loading -->
+            <ActivityIndicator Grid.RowSpan="3" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" Color="#2196F3"/>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

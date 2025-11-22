@@ -27,6 +27,12 @@ Namespace Interfaces
         ''' </summary>
         Function DeletarTudoAsync() As Task
 
+
+
+
+        Function GetHistoricoCompletoAsync() As Task(Of List(Of SaldosMensais))
+
+
     End Interface
 
 End Namespace

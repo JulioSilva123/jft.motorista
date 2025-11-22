@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.DiariosDetalhePage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Editar" Command="{Binding EditarCommand}" Order="Primary"/>
+    </ContentPage.ToolbarItems>
+
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="20">
+
+                <!-- CABEÇALHO -->
+                <StackLayout Spacing="2">
+                    <Label Text="{Binding DataExtenso}" FontSize="18" FontAttributes="Bold" TextColor="#2196F3"/>
+                    <Label Text="{Binding Horario}" FontSize="14" TextColor="Gray"/>
+                    <Label Text="{Binding TempoTotal, StringFormat='Duração: {0}'}" FontSize="12" TextColor="#999"/>
+                </StackLayout>
+
+                <!-- CARD 1: QUILOMETRAGEM -->
+                <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" Padding="15">
+                    <StackLayout Spacing="10">
+                        <Label Text="Quilometragem" FontAttributes="Bold" TextColor="#333"/>
+
+                        <Grid ColumnDefinitions="*, *, *, *">
+                            <!-- Real -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Real" FontSize="9" TextColor="Gray"/>
+                                <Label Text="{Binding KmReal}" FontSize="12" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <!-- Trip -->
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Trip" FontSize="9" TextColor="Gray"/>
+                                <Label Text="{Binding KmTrip}" FontSize="12" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <!-- App -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Apps" FontSize="9" TextColor="Gray"/>
+                                <Label Text="{Binding KmApp}" FontSize="12" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <!-- Morta -->
+                            <StackLayout Grid.Column="3">
+                                <Label Text="Ocioso" FontSize="9" TextColor="Gray"/>
+                                <Label Text="{Binding KmMorta}" FontSize="12" TextColor="{Binding KmMortaCor}" FontAttributes="Bold"/>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- CARD 2: EFICIÊNCIA E CUSTO -->
+                <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" Padding="15" IsVisible="{Binding TemAbastecimento}">
+                    <StackLayout Spacing="10">
+                        <Label Text="Custo e Eficiência" FontAttributes="Bold" TextColor="#333"/>
+
+                        <Grid RowDefinitions="Auto, Auto, Auto" RowSpacing="15">
+                            <Grid Grid.Row="0" ColumnDefinitions="*, *, *">
+                                <StackLayout Grid.Column="0">
+                                    <Label Text="Consumo" FontSize="10" TextColor="Gray"/>
+                                    <Label Text="{Binding LitrosConsumidos}" FontSize="16" TextColor="#333"/>
+                                </StackLayout>
+                                <StackLayout Grid.Column="1">
+                                    <Label Text="Preço Médio" FontSize="10" TextColor="Gray"/>
+                                    <Label Text="{Binding PrecoPorLitro}" FontSize="16" TextColor="#333"/>
+                                </StackLayout>
+                                <StackLayout Grid.Column="2">
+                                    <Label Text="Custo Total" FontSize="10" TextColor="Gray"/>
+                                    <Label Text="{Binding CustoTotalCombustivel}" FontSize="16" TextColor="#F44336" FontAttributes="Bold"/>
+                                </StackLayout>
+                            </Grid>
+
+                            <StackLayout Grid.Row="1" HorizontalOptions="Center">
+                                <Label Text="Rendimento (KM Informado)" FontSize="10" TextColor="Gray" HorizontalOptions="Center"/>
+                                <Label Text="{Binding KmPorLitro}" FontSize="16" TextColor="#333" FontAttributes="Bold" HorizontalOptions="Center"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="2" HorizontalOptions="Center">
+                                <Label Text="Custo por KM Rodado" FontSize="10" TextColor="Gray" HorizontalOptions="Center"/>
+                                <Frame Padding="10,5" BackgroundColor="#FFF3E0" HasShadow="False" CornerRadius="5">
+                                    <Label Text="{Binding CustoPorKmReal}" FontSize="18" TextColor="#E65100" FontAttributes="Bold"/>
+                                </Frame>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- CARD 3: ABASTECIMENTO VINCULADO (ATUALIZADO) -->
+                <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" Padding="15" IsVisible="{Binding TemAbastecimentoVinculado}">
+                    <StackLayout Spacing="10">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="&#xf52f;" FontFamily="FontAwesome" TextColor="#FF9800" VerticalOptions="Center" Margin="0,0,5,0"/>
+                            <Label Text="Origem do Combustível" FontAttributes="Bold" TextColor="#333" VerticalOptions="Center"/>
+                        </StackLayout>
+
+                        <Grid RowDefinitions="Auto, Auto" ColumnDefinitions="*, *, *" RowSpacing="15">
+
+                            <!-- LINHA 1: Matemática (Litros | Preço | Total) -->
+                            <StackLayout Grid.Row="0" Grid.Column="0">
+                                <Label Text="Litros" FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding AbsLitros}" FontSize="16" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="0" Grid.Column="1">
+                                <Label Text="Preço / L" FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding PrecoPorLitro}" FontSize="16" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="0" Grid.Column="2">
+                                <Label Text="Total Pago" FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding AbsTotalPago}" FontSize="16" TextColor="#333" FontAttributes="Bold"/>
+                            </StackLayout>
+
+                            <!-- LINHA 2: Meta Dados (Data | Tipo | Odômetro) -->
+                            <StackLayout Grid.Row="1" Grid.Column="0">
+                                <Label Text="Data" FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding AbsData}" FontSize="12" TextColor="#555"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="1" Grid.Column="1">
+                                <Label Text="Tipo" FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding AbsTipoCombustivel}" FontSize="12" TextColor="#555"/>
+                            </StackLayout>
+
+                            <StackLayout Grid.Row="1" Grid.Column="2">
+                                <Label Text="Odômetro Ref." FontSize="10" TextColor="Gray"/>
+                                <Label Text="{Binding AbsOdometro}" FontSize="12" TextColor="#555"/>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <Label Text="* O Custo por KM é calculado com base no preço do litro do abastecimento vinculado." 
+                       FontSize="10" TextColor="#CCC" HorizontalOptions="Center" Margin="0,20,0,0"/>
+
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+    
+    
+</ContentPage>

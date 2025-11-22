@@ -2,6 +2,7 @@
 Imports System.Runtime.CompilerServices
 Imports jft.motorista.v01.Core.Entities
 Imports SQLite
+Imports Xamarin.Essentials ' Necessário para guardar a versão atual
 
 
 Namespace Data
@@ -38,7 +39,9 @@ Namespace Data
 
         End Sub
 
-
+        ' Defina qual é a versão ATUAL do seu banco de dados aqui
+        ' Sempre que você alterar uma entidade (adicionar campo), aumente esse número.
+        Private Const VERSAO_ATUAL_DB As Integer = 2
         Public Property Connection As SQLiteAsyncConnection  '{ get; private set; }
 
 
@@ -102,10 +105,48 @@ Namespace Data
             Await Connection.CreateTableAsync(Of Diarios)()
             Await Connection.CreateTableAsync(Of Abastecimentos)()
 
+            ' 2. Carga de Dados Padrão
             Await SeedCategoriasAsync()
+
+            ' 3. MIGRAÇÃO MANUAL (Para garantir atualizações complexas)
+            Await VerificarMigracoesAsync()
         End Function
 
 
+        Private Async Function VerificarMigracoesAsync() As Task
+            ' Pega a versão que está instalada no celular do usuário (Padrão 0 se nunca instalou)
+            Dim versaoInstalada = Preferences.Get("DB_VERSION", 0)
+
+            If versaoInstalada < VERSAO_ATUAL_DB Then
+
+                ' --- MIGRAÇÃO PARA VERSÃO 2 (Exemplo: Adicionamos id_lancamento em Abastecimentos) ---
+                If versaoInstalada < 2 Then
+                    Try
+                        ' Tenta adicionar a coluna manualmente caso o CreateTableAsync tenha falhado
+                        ' O SQLite não dá erro se a coluna já existir usando "ADD COLUMN" em algumas versões,
+                        ' mas para garantir, colocamos num Try/Catch vazio ou verificamos antes.
+
+                        ' Exemplo de comando SQL direto para garantir a estrutura:
+                        ' Await Connection.ExecuteAsync("ALTER TABLE Abastecimentos ADD COLUMN id_lancamento INTEGER DEFAULT 0")
+
+                        ' Como usamos CreateFlags.AllImplicit acima, ele JÁ DEVE ter criado.
+                        ' Mas se você renomeou uma coluna (Ex: "Valor" para "vl_lancamento"), 
+                        ' o SQLite cria a nova e deixa a velha. Aqui você poderia migrar os dados:
+                        ' Await Connection.ExecuteAsync("UPDATE Lancamentos SET vl_lancamento = Valor WHERE vl_lancamento IS NULL")
+
+                    Catch ex As Exception
+                        ' Logar erro de migração silencioso
+                        Console.WriteLine($"Erro na Migração V2: {ex.Message}")
+                    End Try
+                End If
+
+                ' --- FUTURA MIGRAÇÃO PARA VERSÃO 3 ---
+                ' If versaoInstalada < 3 Then ...
+
+                ' Atualiza a versão no celular para não rodar de novo
+                Preferences.Set("DB_VERSION", VERSAO_ATUAL_DB)
+            End If
+        End Function
         Private Async Function SeedCategoriasAsync() As Task
             ' Verifica se a tabela de categorias está vazia
             If Await Categorias.CountAsync() = 0 Then

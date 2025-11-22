@@ -5,4 +5,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Common\BaseItemViewModel.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\jft.motorista.v01.Core.EntitiesViews\jft.motorista.v01.Core.EntitiesViews.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core.Entities\jft.motorista.v01.Core.Entities.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Core\jft.motorista.v01.Core.vbproj" />
+    <ProjectReference Include="..\jft.motorista.v01.Infra\jft.motorista.v01.Infra.vbproj" />
+  </ItemGroup>
+
 </Project>

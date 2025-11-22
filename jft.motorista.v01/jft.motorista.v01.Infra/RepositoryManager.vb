@@ -30,6 +30,11 @@ Public Class RepositoryManager
     ' PROPRIEDADES DE ACESSO AOS REPOSITÓRIOS
     ' ============================================================
 
+
+
+
+
+
     Private _abastecimentos As IAbastecimentosRepository
     Public ReadOnly Property Abastecimentos As IAbastecimentosRepository Implements IRepositoryManager.Abastecimentos
         Get

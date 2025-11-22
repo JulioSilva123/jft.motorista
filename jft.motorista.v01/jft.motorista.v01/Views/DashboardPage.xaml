@@ -7,8 +7,6 @@
              NavigationPage.HasNavigationBar="False">
     <!-- HasNavigationBar="False" esconde a barra padrão para usarmos nosso cabeçalho azul -->
 
-
-
     <ContentPage.Content>
         <Grid RowDefinitions="Auto, Auto, *" RowSpacing="0">
 
@@ -18,8 +16,8 @@
             <StackLayout Grid.Row="0" BackgroundColor="#2196F3" Padding="20,30,20,50">
 
                 <!-- LINHA SUPERIOR: Título e Botões -->
-                <!-- Alterado para 3 colunas: *, Auto, Auto -->
-                <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="15">
+                <!-- ATUALIZADO: 5 Colunas para caber todos os ícones -->
+                <Grid ColumnDefinitions="*, Auto, Auto, Auto, Auto" ColumnSpacing="10">
 
                     <!-- Título -->
                     <Label Grid.Column="0" 
@@ -28,25 +26,41 @@
                            Opacity="0.9" 
                            VerticalOptions="Center"/>
 
-                    <!-- NOVO: BOTÃO VEÍCULOS (Carro) -->
+                    <!-- 1. VEÍCULOS -->
                     <ImageButton Grid.Column="1"
                                  Clicked="OnMeusVeiculosClicked"
                                  BackgroundColor="Transparent"
-                                 HeightRequest="30"
-                                 WidthRequest="30"
-                                 VerticalOptions="Center">
+                                 HeightRequest="30" WidthRequest="30" VerticalOptions="Center">
                         <ImageButton.Source>
                             <FontImageSource FontFamily="FontAwesome" Glyph="&#xf1b9;" Color="White" Size="20"/>
                         </ImageButton.Source>
                     </ImageButton>
 
-                    <!-- BOTÃO CONFIGURAÇÕES (Engrenagem) -->
+                    <!-- 2. ABASTECIMENTOS -->
                     <ImageButton Grid.Column="2"
+                                 Clicked="OnMeusAbastecimentosClicked"
+                                 BackgroundColor="Transparent"
+                                 HeightRequest="30" WidthRequest="30" VerticalOptions="Center">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf52f;" Color="White" Size="20"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <!-- 3. NOVO: DIÁRIOS (Prancheta) -->
+                    <ImageButton Grid.Column="3"
+                                 Clicked="OnMeusDiariosClicked"
+                                 BackgroundColor="Transparent"
+                                 HeightRequest="30" WidthRequest="30" VerticalOptions="Center">
+                        <ImageButton.Source>
+                            <FontImageSource FontFamily="FontAwesome" Glyph="&#xf46d;" Color="White" Size="20"/>
+                        </ImageButton.Source>
+                    </ImageButton>
+
+                    <!-- 4. CONFIGURAÇÕES -->
+                    <ImageButton Grid.Column="4"
                                  Clicked="OnConfiguracoesClicked"
                                  BackgroundColor="Transparent"
-                                 HeightRequest="30"
-                                 WidthRequest="30"
-                                 VerticalOptions="Center">
+                                 HeightRequest="30" WidthRequest="30" VerticalOptions="Center">
                         <ImageButton.Source>
                             <FontImageSource FontFamily="FontAwesome" Glyph="&#xf013;" Color="White" Size="22"/>
                         </ImageButton.Source>
@@ -185,7 +199,6 @@
                                     <Frame Grid.Column="0" CornerRadius="25" HeightRequest="50" WidthRequest="50" 
                                            Padding="0" HasShadow="False" BackgroundColor="#F0F0F0" IsClippedToBounds="True"
                                            VerticalOptions="Center">
-                                        <!-- IMPORTANTE: Se não usar FontAwesome, troque por uma Image ou texto simples -->
                                         <Label Text="{Binding Icone}" 
                                                FontFamily="FontAwesome"
                                                TextColor="#555"
@@ -220,7 +233,6 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
 
-                    <!-- Espaço extra no final para o botão não tampar o último item -->
                     <CollectionView.Footer>
                         <BoxView HeightRequest="80" Color="Transparent"/>
                     </CollectionView.Footer>
@@ -243,7 +255,6 @@
                                  HorizontalOptions="Center"
                                  VerticalOptions="Center">
                         <ImageButton.Source>
-                            <!-- Use um arquivo local "plus.png" ou FontAwesome -->
                             <FontImageSource FontFamily="FontAwesome" Glyph="&#xf067;" Color="White" Size="24"/>
                         </ImageButton.Source>
                     </ImageButton>

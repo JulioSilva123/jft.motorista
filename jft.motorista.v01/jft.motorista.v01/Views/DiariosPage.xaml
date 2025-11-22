@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:behaviors="clr-namespace:jft.motorista.v01.Aplicativo.Behaviors;assembly=jft.motorista.v01.Aplicativo"
+             x:Class="jft.motorista.v01.Views.DiariosPage"
+             Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+
+
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto" Padding="20" RowSpacing="20">
+
+                <!-- 1. DATA E HORÁRIOS -->
+                <Frame Grid.Row="0" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                    <StackLayout Spacing="10">
+                        <Label Text="Jornada de Trabalho" TextColor="#2196F3" FontAttributes="Bold"/>
+
+                        <Grid ColumnDefinitions="*, *, *">
+                            <!-- Data -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Data" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="5,0" HasShadow="False">
+                                    <DatePicker Date="{Binding Data}" TextColor="#333" Format="dd/MM"/>
+                                </Frame>
+                            </StackLayout>
+
+                            <!-- Início -->
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Início" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="5,0" HasShadow="False">
+                                    <TimePicker Time="{Binding HoraInicio}" TextColor="#333"/>
+                                </Frame>
+                            </StackLayout>
+
+                            <!-- Fim -->
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Fim" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="5,0" HasShadow="False">
+                                    <TimePicker Time="{Binding HoraFim}" TextColor="#333"/>
+                                </Frame>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Duração Calculada -->
+                        <Label Text="{Binding TempoDisplay, StringFormat='Duração: {0}'}" 
+                               HorizontalOptions="End" TextColor="Gray" FontSize="11"/>
+                    </StackLayout>
+                </Frame>
+
+                <!-- 2. ODÔMETRO -->
+                <Frame Grid.Row="1" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                    <StackLayout Spacing="10">
+                        <Label Text="Odômetro (Carro)" TextColor="#2196F3" FontAttributes="Bold"/>
+
+                        <Grid ColumnDefinitions="*, *">
+                            <!-- KM Inicial -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Inicial (Saída)" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="10,5" HasShadow="False">
+                                    <Entry Text="{Binding KmInicial, Mode=TwoWay}" 
+                                           Keyboard="Numeric" 
+                                           TextColor="#333"
+                                           FontAttributes="Bold">
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericValidationBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </Frame>
+                            </StackLayout>
+
+                            <!-- KM Final -->
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Final (Chegada)" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="10,5" HasShadow="False">
+                                    <Entry Text="{Binding KmFinal, Mode=TwoWay}" 
+                                           Keyboard="Numeric" 
+                                           TextColor="#333"
+                                           FontAttributes="Bold">
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericValidationBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </Frame>
+                            </StackLayout>
+                        </Grid>
+
+                        <!-- Total Rodado -->
+                        <Label Text="{Binding TotalRodadoDisplay, StringFormat='Rodou: {0}'}" 
+                               HorizontalOptions="End" TextColor="#4CAF50" FontAttributes="Bold"/>
+                    </StackLayout>
+                </Frame>
+
+                <!-- 3. DISTÂNCIA REGISTRADA -->
+                <Frame Grid.Row="2" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                    <StackLayout Spacing="10">
+                        <Label Text="Distância Percorrida" TextColor="#2196F3" FontAttributes="Bold"/>
+
+                        <Grid ColumnDefinitions="*, *">
+                            <!-- Trip -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Trip (Painel)" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="10,5" HasShadow="False">
+                                    <Entry Text="{Binding KmTrip, Mode=TwoWay}" 
+                                           Placeholder="0" 
+                                           Keyboard="Numeric" 
+                                           TextColor="#333" 
+                                           FontAttributes="Bold">
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericValidationBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </Frame>
+                            </StackLayout>
+
+                            <!-- App (NOVO) -->
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Apps (Uber/99)" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="10,5" HasShadow="False">
+                                    <Entry Text="{Binding KmApp, Mode=TwoWay}" 
+                                           Placeholder="0" 
+                                           Keyboard="Numeric" 
+                                           TextColor="#333" 
+                                           FontAttributes="Bold">
+                                        <Entry.Behaviors>
+                                            <behaviors:NumericValidationBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </Frame>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- 4. CONSUMO E ABASTECIMENTO -->
+                <Frame Grid.Row="3" BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
+                    <StackLayout Spacing="10">
+                        <Label Text="Combustível" TextColor="#2196F3" FontAttributes="Bold"/>
+
+                        <Grid ColumnDefinitions="*, *">
+                            <!-- Litros Consumidos -->
+                            <StackLayout Grid.Column="0">
+                                <Label Text="Litros Gastos" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="10,5" HasShadow="False">
+                                    <Entry Text="{Binding LitrosConsumidos, Mode=TwoWay}" 
+                                           Keyboard="Text" 
+                                           Placeholder="0,00"
+                                           TextColor="#333">
+                                        <!-- Usa CurrencyInputBehavior para permitir vírgula/casas decimais -->
+                                        <Entry.Behaviors>
+                                            <behaviors:CurrencyInputBehavior />
+                                        </Entry.Behaviors>
+                                    </Entry>
+                                </Frame>
+                            </StackLayout>
+
+                            <!-- Vínculo com Abastecimento -->
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Abasteceu Hoje?" FontSize="10" TextColor="Gray"/>
+                                <Frame BorderColor="#E0E0E0" CornerRadius="5" Padding="0" HasShadow="False">
+                                    <!-- Picker para selecionar abastecimento do dia -->
+                                    <Picker ItemsSource="{Binding ListaAbastecimentos}"
+                                            SelectedItem="{Binding AbastecimentoSelecionado}"
+                                            ItemDisplayBinding="{Binding vl_total_pago, StringFormat='{0:C}'}"
+                                            Title="Selecione..."
+                                            TextColor="#333"/>
+                                </Frame>
+                            </StackLayout>
+                        </Grid>
+
+                        <Label Text="Selecione o abastecimento para calcular o custo real do dia." 
+                               FontSize="10" TextColor="Gray" FontAttributes="Italic"/>
+                    </StackLayout>
+                </Frame>
+
+                
+                <!-- 5. OBSERVAÇÃO -->
+                <StackLayout Grid.Row="4">
+                    <Label Text="Observações" TextColor="Gray" FontSize="12"/>
+                    <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                        <Entry Text="{Binding Observacao}" Placeholder="Ex: Pneu furou, Trânsito intenso" TextColor="#333"/>
+                    </Frame>
+                </StackLayout>
+
+                <!-- 6. BOTÃO SALVAR -->
+                <StackLayout Grid.Row="5" Margin="0,20,0,20">
+                    <Button Text="FECHAR DIÁRIO" 
+                            Command="{Binding SalvarCommand}" 
+                            BackgroundColor="#2196F3" 
+                            TextColor="White" 
+                            CornerRadius="25" 
+                            HeightRequest="50" 
+                            FontAttributes="Bold" 
+                            IsEnabled="{Binding IsNotBusy}"/>
+                </StackLayout>
+
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

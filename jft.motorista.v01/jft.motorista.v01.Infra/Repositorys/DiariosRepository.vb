@@ -45,26 +45,36 @@ Namespace Repositorys
             Dim dataInicio As New DateTime(ano, mes, 1)
             Dim dataFim = dataInicio.AddMonths(1).AddTicks(-1)
 
-            ' Busca Ordenada
+            ' MUDANÇA 1: Busca Ordenada por Data CRESCENTE (Dia 1 -> Dia 30)
+            ' Isso é necessário para o cálculo acumulado fazer sentido cronologicamente.
             Dim diarios = Await _context.Connection.Table(Of Diarios) _
                                         .Where(Function(d) d.dt_diario >= dataInicio AndAlso d.dt_diario <= dataFim) _
                                         .OrderBy(Function(d) d.dt_diario) _
                                         .ToListAsync()
 
+            ' Traz abastecimentos para memória (Cache)
             Dim abastecimentos = Await _context.Connection.Table(Of Abastecimentos).ToListAsync()
+
             Dim totalAcumulado As Decimal = 0
 
-            ' Cálculo Linha a Linha
+            ' MUDANÇA 2: Cálculo Linha a Linha
             For Each diario In diarios
+                ' Hydration
                 If diario.id_abastecimento > 0 Then
                     diario.Abastecimento = abastecimentos.FirstOrDefault(Function(a) a.id_abastecimento = diario.id_abastecimento)
                 End If
 
+                ' Soma o custo do dia ao acumulado do mês
+                ' Se diario.Abastecimento for null, CustoCombustivelReal retorna 0, o que é seguro.
                 totalAcumulado += diario.CustoCombustivelReal
+
+                ' Grava o "Saldo naquele momento"
                 diario.CustoAcumulado = totalAcumulado
             Next
 
+            ' MUDANÇA 3: Inverte a lista para exibição (Mais recente no topo)
             diarios.Reverse()
+
             Return (diarios, totalAcumulado)
         End Function
 

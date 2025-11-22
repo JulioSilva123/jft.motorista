@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:behaviors="clr-namespace:jft.motorista.v01.Aplicativo.Behaviors;assembly=jft.motorista.v01.Aplicativo"
+             x:Class="jft.motorista.v01.Views.AbastecimentosPage"
+              Title="{Binding TituloPagina}"
+             BackgroundColor="#F5F5F5">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid RowDefinitions="Auto, Auto, Auto, Auto, *" Padding="20" RowSpacing="20">
+
+                <!-- 1. Veículo -->
+                <Frame Grid.Row="0" BackgroundColor="#E3F2FD" CornerRadius="10" Padding="15" HasShadow="False">
+                    <StackLayout Orientation="Horizontal" Spacing="15">
+                        <Label Text="&#xf1b9;" FontFamily="FontAwesome" FontSize="24" TextColor="#2196F3" VerticalOptions="Center"/>
+                        <StackLayout>
+                            <Label Text="VEÍCULO ATUAL" FontSize="10" TextColor="#1976D2" FontAttributes="Bold"/>
+                            <Label Text="{Binding NomeVeiculo}" FontSize="16" TextColor="#0D47A1" FontAttributes="Bold"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <!-- 2. KM e Data -->
+                <Grid Grid.Row="1">
+                    <!-- DEFINIÇÃO EXPLÍCITA DE COLUNAS (Correção da Sobreposição) -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackLayout Grid.Column="0">
+                        <Label Text="Odômetro (KM)" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                            <Entry Text="{Binding KmOdometro, Mode=TwoWay}" Keyboard="Numeric" TextColor="#333" FontAttributes="Bold"/>
+                        </Frame>
+                    </StackLayout>
+
+                    <StackLayout Grid.Column="1">
+                        <Label Text="Data" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="5,0" HasShadow="False">
+                            <DatePicker Date="{Binding Data}" TextColor="#333"/>
+                        </Frame>
+                    </StackLayout>
+                </Grid>
+
+                <!-- 3. Valores -->
+                <StackLayout Grid.Row="2" Spacing="15">
+
+                    <!-- Total Pago -->
+                    <StackLayout>
+                        <Label Text="Total Pago (R$)" TextColor="Gray" FontSize="12"/>
+                        <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                            <Entry Text="{Binding ValorTotal, Mode=TwoWay}" 
+                                   Keyboard="Text" 
+                                   FontSize="30" 
+                                   TextColor="#4CAF50" 
+                                   FontAttributes="Bold" 
+                                   Placeholder="0,00">
+                                <Entry.Behaviors>
+                                    <behaviors:CurrencyInputBehavior />
+                                </Entry.Behaviors>
+                            </Entry>
+                        </Frame>
+                    </StackLayout>
+
+                    <Grid>
+                        <!-- DEFINIÇÃO EXPLÍCITA DE COLUNAS (Correção da Sobreposição) -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackLayout Grid.Column="0">
+                            <Label Text="Litros" TextColor="Gray" FontSize="12"/>
+                            <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="10,5" HasShadow="False">
+                                <Entry Text="{Binding Litros, Mode=TwoWay}" Keyboard="Text" TextColor="#333" Placeholder="0,00">
+                                    <Entry.Behaviors>
+                                        <behaviors:CurrencyInputBehavior />
+                                    </Entry.Behaviors>
+                                </Entry>
+                            </Frame>
+                        </StackLayout>
+
+                        <StackLayout Grid.Column="1">
+                            <Label Text="Combustível" TextColor="Gray" FontSize="12"/>
+                            <Frame BorderColor="#E0E0E0" CornerRadius="8" Padding="5,0" HasShadow="False">
+                                <Picker SelectedIndex="{Binding TipoCombustivel}" TextColor="#333">
+                                    <Picker.Items>
+                                        <x:String>Gasolina</x:String>
+                                        <x:String>Etanol</x:String>
+                                        <x:String>Diesel</x:String>
+                                        <x:String>GNV</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Frame>
+                        </StackLayout>
+                    </Grid>
+
+                    <Label Text="{Binding PrecoPorLitroDisplay, StringFormat='Preço calculado: {0}'}" HorizontalOptions="Center" TextColor="Gray" FontSize="12"/>
+                </StackLayout>
+
+                <!-- 4. Integração Financeira (Só aparece se for novo) -->
+                <Frame Grid.Row="3" BorderColor="#E0E0E0" CornerRadius="8" Padding="15,10" HasShadow="False" IsVisible="{Binding IsNovo}">
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Lançar no Financeiro" VerticalOptions="Center" TextColor="#333" FontAttributes="Bold" HorizontalOptions="FillAndExpand"/>
+                        <Switch IsToggled="{Binding GerarDespesa}" OnColor="#4CAF50"/>
+                    </StackLayout>
+                </Frame>
+
+                <!-- 5. Botão -->
+                <StackLayout Grid.Row="4" VerticalOptions="End" Margin="0,20">
+                    <Button Text="REGISTRAR" 
+                            Command="{Binding SalvarCommand}" 
+                            BackgroundColor="#2196F3" 
+                            TextColor="White" 
+                            CornerRadius="25" 
+                            HeightRequest="50" 
+                            FontAttributes="Bold" 
+                            IsEnabled="{Binding IsNotBusy}"/>
+                </StackLayout>
+
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+
+</ContentPage>

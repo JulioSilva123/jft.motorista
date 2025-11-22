@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="jft.motorista.v01.Views.AbastecimentosListaPage"
+             Title="{Binding Titulo}"
+             BackgroundColor="#F5F5F5">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Novo" Clicked="OnNovoClicked" Order="Primary" Priority="0" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <CollectionView ItemsSource="{Binding Lista}"
+                            SelectionMode="Single"
+                            SelectionChanged="OnItemSelected">
+
+                <CollectionView.EmptyView>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                        <Label Text="Sem abastecimentos." TextColor="Gray"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Excluir" 
+                                               BackgroundColor="Red" 
+                                               Command="{Binding Path=BindingContext.DeletarCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid Padding="15,12" BackgroundColor="White" ColumnDefinitions="Auto, *, Auto">
+
+                                <!-- Ícone -->
+                                <Frame Grid.Column="0" CornerRadius="20" HeightRequest="40" WidthRequest="40" Padding="0" BackgroundColor="#FFF3E0" HasShadow="False" VerticalOptions="Center">
+                                    <Label Text="&#xf52f;" FontFamily="FontAwesome" TextColor="#FF9800" HorizontalOptions="Center" VerticalOptions="Center" FontSize="18"/>
+                                </Frame>
+
+                                <!-- Dados -->
+                                <StackLayout Grid.Column="1" Padding="15,0" VerticalOptions="Center" Spacing="2">
+                                    <Label Text="{Binding ValorTotalFormatado}" FontAttributes="Bold" TextColor="#333" FontSize="16"/>
+                                    <Label Text="{Binding Detalhes}" TextColor="Gray" FontSize="12"/>
+                                </StackLayout>
+
+                                <!-- Data e KM -->
+                                <StackLayout Grid.Column="2" HorizontalOptions="End" VerticalOptions="Center">
+                                    <Label Text="{Binding DataFormatada}" TextColor="#333" FontAttributes="Bold" HorizontalOptions="End"/>
+                                    <Label Text="{Binding KmDescricao}" TextColor="Gray" FontSize="11" HorizontalOptions="End"/>
+                                </StackLayout>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" Color="#2196F3"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -65,18 +65,28 @@ Namespace Repositorys
             Await _context.Connection.DeleteAllAsync(Of SaldosMensais)()
         End Function
 
-        Public Function GetItemAsync(id As Integer) As Task(Of SaldosMensais) Implements IBaseRepository(Of SaldosMensais).GetItemAsync
-            Throw New NotImplementedException()
+        Public Async Function GetItemAsync(id As Integer) As Task(Of SaldosMensais) Implements IBaseRepository(Of SaldosMensais).GetItemAsync
+            Return Await _context.SaldosMensais.Where(Function(s) s.id_saldomensal = id).FirstOrDefaultAsync()
         End Function
 
-        Public Function SalvarAsync(item As SaldosMensais) As Task Implements IBaseRepository(Of SaldosMensais).SalvarAsync
-            Throw New NotImplementedException()
+        Public Async Function SalvarAsync(item As SaldosMensais) As Task Implements IBaseRepository(Of SaldosMensais).SalvarAsync
+            If item.id_saldomensal <> 0 Then
+                Await _context.Connection.UpdateAsync(item)
+            Else
+                Await _context.Connection.InsertAsync(item)
+            End If
         End Function
 
-        Public Function DeletarAsync(item As SaldosMensais) As Task Implements IBaseRepository(Of SaldosMensais).DeletarAsync
-            Throw New NotImplementedException()
+        Public Async Function DeletarAsync(item As SaldosMensais) As Task Implements IBaseRepository(Of SaldosMensais).DeletarAsync
+            Await _context.Connection.DeleteAsync(item)
         End Function
 
+        Public Async Function GetHistoricoCompletoAsync() As Task(Of List(Of SaldosMensais)) Implements ISaldosMensaisRepository.GetHistoricoCompletoAsync
+            Return Await _context.SaldosMensais _
+                                 .OrderByDescending(Function(s) s.nr_ano) _
+                                 .ThenByDescending(Function(s) s.nr_mes) _
+                                 .ToListAsync()
+        End Function
     End Class
 
 

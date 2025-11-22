@@ -20,6 +20,10 @@ Namespace Interfaces
         ''' </summary>
         Function GetUltimoDoVeiculoAsync(idVeiculo As Integer) As Task(Of Abastecimentos)
 
+
+        ' NOVO: Busca abastecimentos de um dia específico para vincular ao diário
+        Function GetPorDataVeiculoAsync(data As DateTime, idVeiculo As Integer) As Task(Of List(Of Abastecimentos))
+
     End Interface
 
 End Namespace

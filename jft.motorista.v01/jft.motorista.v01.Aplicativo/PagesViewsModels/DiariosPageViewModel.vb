@@ -21,7 +21,9 @@ Namespace PagesViewsModels
         Private _idEdicao As Integer = 0
         Private _veiculoAtual As Veiculos
 
-        ' ... (Propriedades Visuais e Comandos permanecem iguais) ...
+        ' ============================================================
+        ' PROPRIEDADES VISUAIS
+        ' ============================================================
 
         Private _tituloPagina As String = "Novo Diário"
         Public Property TituloPagina As String
@@ -45,6 +47,7 @@ Namespace PagesViewsModels
             End Set
         End Property
 
+        ' Horários
         Private _horaInicio As TimeSpan = New TimeSpan(8, 0, 0)
         Public Property HoraInicio As TimeSpan
             Get
@@ -66,6 +69,8 @@ Namespace PagesViewsModels
                 RecalcularTempo()
             End Set
         End Property
+
+        ' ... (Inputs Numéricos: KmInicial, KmFinal, KmTrip, Litros, Observacao - MANTIDOS IGUAIS) ...
 
         Private _kmInicial As String
         Public Property KmInicial As String
@@ -97,17 +102,6 @@ Namespace PagesViewsModels
             End Set
         End Property
 
-        ' NOVO: Propriedade para o KM do Aplicativo
-        Private _kmApp As String
-        Public Property KmApp As String
-            Get
-                Return _kmApp
-            End Get
-            Set(value As String)
-                SetProperty(_kmApp, value)
-            End Set
-        End Property
-
         Private _litrosConsumidos As String
         Public Property LitrosConsumidos As String
             Get
@@ -136,7 +130,9 @@ Namespace PagesViewsModels
                 Return _abastecimentoSelecionado
             End Get
             Set(value As Abastecimentos)
-                SetProperty(_abastecimentoSelecionado, value)
+                If SetProperty(_abastecimentoSelecionado, value) Then
+                    ' Opcional
+                End If
             End Set
         End Property
 
@@ -160,12 +156,24 @@ Namespace PagesViewsModels
             End Set
         End Property
 
+        ' ============================================================
+        ' COMANDOS
+        ' ============================================================
         Public Property SalvarCommand As ICommand
         Public Property CancelarCommand As ICommand
 
+        ' NOVOS COMANDOS DE HORÁRIO
+        Public Property DefinirInicioAgoraCommand As ICommand
+        Public Property DefinirFimAgoraCommand As ICommand
+
+        ' ============================================================
+        ' CONSTRUTOR
+        ' ============================================================
         Public Sub New(repo As IRepositoryManager, Optional itemEditar As Diarios = Nothing)
             MyBase.New(repo)
+
             ListaAbastecimentos = New ObservableCollection(Of Abastecimentos)()
+
             ConfigurarComandos()
             InicializarAsync(itemEditar).SafeFireAndForget()
         End Sub
@@ -173,7 +181,18 @@ Namespace PagesViewsModels
         Private Sub ConfigurarComandos()
             SalvarCommand = New Command(Async Sub() Await SalvarAsync())
             CancelarCommand = New Command(Async Sub() Await Application.Current.MainPage.Navigation.PopAsync())
+
+            ' ATUALIZADO: Comandos para pegar a hora atual
+            DefinirInicioAgoraCommand = New Command(Sub()
+                                                        HoraInicio = DateTime.Now.TimeOfDay
+                                                    End Sub)
+
+            DefinirFimAgoraCommand = New Command(Sub()
+                                                     HoraFim = DateTime.Now.TimeOfDay
+                                                 End Sub)
         End Sub
+
+        ' ... (InicializarAsync, CarregarAbastecimentos, RecalcularKmRodado, RecalcularTempo, SalvarAsync - MANTIDOS IGUAIS) ...
 
         Private Async Function InicializarAsync(item As Diarios) As Task
             IsBusy = True
@@ -181,7 +200,6 @@ Namespace PagesViewsModels
                 _veiculoAtual = Await Repo.Veiculos.GetVeiculoAtivoAsync()
 
                 If item Is Nothing Then
-                    ' --- NOVO ---
                     TituloPagina = "Novo Diário"
                     _idEdicao = 0
                     If _veiculoAtual IsNot Nothing Then
@@ -189,7 +207,6 @@ Namespace PagesViewsModels
                     End If
                     Await CarregarAbastecimentosDoDiaAsync()
                 Else
-                    ' --- EDIÇÃO ---
                     TituloPagina = "Editar Diário"
                     _idEdicao = item.id_diario
                     Data = item.dt_diario
@@ -199,13 +216,7 @@ Namespace PagesViewsModels
 
                     KmInicial = If(item.nr_km_inicial > 0, item.nr_km_inicial.ToString("0.####", _culturaBR), String.Empty)
                     KmFinal = If(item.nr_km_final > 0, item.nr_km_final.ToString("0.####", _culturaBR), String.Empty)
-
-                    ' Carrega Trip
                     KmTrip = If(item.nr_km_informado_trip > 0, item.nr_km_informado_trip.ToString("0.####", _culturaBR), String.Empty)
-
-                    ' NOVO: Carrega App
-                    KmApp = If(item.nr_km_informado_app > 0, item.nr_km_informado_app.ToString("0.####", _culturaBR), String.Empty)
-
                     LitrosConsumidos = If(item.qt_litros_consumidos > 0, item.qt_litros_consumidos.ToString("0.###", _culturaBR), String.Empty)
 
                     If _veiculoAtual Is Nothing OrElse _veiculoAtual.id_veiculo <> item.id_veiculo Then
@@ -217,12 +228,14 @@ Namespace PagesViewsModels
                         AbastecimentoSelecionado = ListaAbastecimentos.FirstOrDefault(Function(a) a.id_abastecimento = item.id_abastecimento)
                     End If
                 End If
+
                 RecalcularKmRodado()
                 RecalcularTempo()
             Finally
                 IsBusy = False
             End Try
         End Function
+
         Private Async Function CarregarAbastecimentosDoDiaAsync() As Task
             If _veiculoAtual Is Nothing Then Return
             Dim lista = Await Repo.Abastecimentos.GetPorDataVeiculoAsync(Data, _veiculoAtual.id_veiculo)
@@ -258,20 +271,28 @@ Namespace PagesViewsModels
             If IsBusy Then Return
 
             If _veiculoAtual Is Nothing Then
-                Await Application.Current.MainPage.DisplayAlert("Erro", "Nenhum veículo ativo.", "OK")
+                Await Application.Current.MainPage.DisplayAlert("Erro", "Nenhum veículo ativo encontrado.", "OK")
                 Return
             End If
 
-            Dim kmIni, kmFim, kmTripVal, kmAppVal, litCon As Decimal
+            Dim kmIni, kmFim, kmTripVal, litCon As Decimal
             Decimal.TryParse(KmInicial, NumberStyles.Any, _culturaBR, kmIni)
             Decimal.TryParse(KmFinal, NumberStyles.Any, _culturaBR, kmFim)
             Decimal.TryParse(KmTrip, NumberStyles.Any, _culturaBR, kmTripVal)
-            Decimal.TryParse(KmApp, NumberStyles.Any, _culturaBR, kmAppVal)
             Decimal.TryParse(LitrosConsumidos, NumberStyles.Any, _culturaBR, litCon)
 
-            ' Validação: Pelo menos uma info de distância deve existir
-            If kmTripVal <= 0 AndAlso kmAppVal <= 0 AndAlso (kmIni <= 0 OrElse kmFim <= 0) Then
-                Await Application.Current.MainPage.DisplayAlert("Atenção", "Informe a KM do Trip, do App ou o Odômetro.", "OK")
+            If kmTripVal <= 0 Then
+                Await Application.Current.MainPage.DisplayAlert("Atenção", "Informe a KM do Trip (Painel).", "OK")
+                Return
+            End If
+
+            If (kmIni > 0 AndAlso kmFim = 0) OrElse (kmIni = 0 AndAlso kmFim > 0) Then
+                Dim continuar = Await Application.Current.MainPage.DisplayAlert("Odômetro Incompleto", "Odômetro parcial. Salvar assim mesmo?", "Sim", "Não")
+                If Not continuar Then Return
+            End If
+
+            If kmIni > 0 AndAlso kmFim > 0 AndAlso kmFim < kmIni Then
+                Await Application.Current.MainPage.DisplayAlert("Atenção", "KM Final menor que Inicial.", "OK")
                 Return
             End If
 
@@ -294,7 +315,7 @@ Namespace PagesViewsModels
                     .nr_km_inicial = kmIni,
                     .nr_km_final = kmFim,
                     .nr_km_informado_trip = kmTripVal,
-                    .nr_km_informado_app = kmAppVal, ' NOVO
+                    .nr_km_informado_app = 0,
                     .qt_litros_consumidos = litCon,
                     .te_observacoes = Observacao
                 }
@@ -314,7 +335,6 @@ Namespace PagesViewsModels
         End Function
 
     End Class
-
 
 
 
